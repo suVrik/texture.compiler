@@ -3,7 +3,6 @@
 #include "irradiance_shader/irradiance_shader.fragment.h"
 #include "prefilter_shader/prefilter_shader.fragment.h"
 
-#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 #include <bgfx/bgfx.h>
@@ -1134,23 +1133,31 @@ int main(int argc, char* argv[]) {
     std::string output_prefilter;      // Cube map only
     size_t output_prefilter_size = 0;  // Cube map only
 
-    auto cli = clara::Opt(is_albedo_roughness)["--albedo-roughness"]("Texture that contains albedo map and roughness map") |
-            clara::Opt(is_normal_metalness_ambient_occlusion)["--normal-metalness-ambient-occlusion"]("Texture that contains normal, metalness and ambient occlusion maps") |
-            clara::Opt(is_parallax)["--parallax"]("Path to a texture that contains parallax map") |
-            clara::Opt(is_cube_map)["--cube-map"]("Path to a texture that contains cube map") |
-            clara::Opt(is_production)["--production"]("Good but slow texture compression") |
-            clara::Opt(is_development)["--development"]("Poor but quick texture compression") |
-            clara::Opt(is_no_compression)["--no-compression"]("No texture compression") |
+    bool is_help = false;
+
+    auto cli = clara::Opt(is_albedo_roughness)["--albedo-roughness"]("Input contains albedo map and roughness map") |
+            clara::Opt(is_normal_metalness_ambient_occlusion)["--normal-metalness-ambient-occlusion"]("Input contains normal, metalness and ambient occlusion maps") |
+            clara::Opt(is_parallax)["--parallax"]("Input contains parallax map") |
+            clara::Opt(is_cube_map)["--cube-map"]("Input contains cube map") |
             clara::Opt(input, "example.png")["--input"]("Input texture path") |
             clara::Opt(output, "example.texture")["--output"]("Output texture path") |
             clara::Opt(output_size, "1024")["--output-size"]("Output texture size (needed only for cube map, for other textures output texture size is equal to input texture size)") |
             clara::Opt(output_irradiance, "irradiance.texture")["--irradiance"]("Output irradiance texture path (needed only for cube map)") |
             clara::Opt(output_irradiance_size, "32")["--irradiance-size"]("Output irradiance texture size (needed only for cube map)") |
             clara::Opt(output_prefilter, "prefilter.texture")["--prefilter"]("Output prefilter texture path (needed only for cube map)") |
-            clara::Opt(output_prefilter_size, "128")["--prefilter-size"]("Output prefilter texture size (needed only for cube map)");
+            clara::Opt(output_prefilter_size, "128")["--prefilter-size"]("Output prefilter texture size (needed only for cube map)") |
+            clara::Opt(is_production)["--production"]("Good but slow texture compression") |
+            clara::Opt(is_development)["--development"]("Poor but quick texture compression") |
+            clara::Opt(is_no_compression)["--no-compression"]("No texture compression") |
+            clara::Help(is_help);
 
     if (auto result = cli.parse(clara::Args(argc, argv)); !result) {
         std::cout << "Texture compiler error. Failed to parse command line arguments: " << result.errorMessage() << std::endl;
+        return 1;
+    }
+
+    if (is_help) {
+        std::cout << cli << std::endl;
         return 1;
     }
 
