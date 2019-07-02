@@ -29,7 +29,14 @@ if(WIN32)
     target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/bimg.lib")
     target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/bx.lib")
     target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/astc-codec.lib")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/bc6h.lib")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/bc7.lib")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/nvcore.lib")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/nvimage.lib")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/nvmath.lib")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/nvthread.lib")
     target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/nvtt.lib")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/squish.lib")
 elseif(APPLE)
     # TODO: MacOS
 elseif(UNIX)
@@ -78,10 +85,4 @@ deploy_shared_library("sdl2"
         "${CMAKE_SOURCE_DIR}/lib/SDL2/Darwin/bin/SDL2.dylib"
         "${CMAKE_SOURCE_DIR}/lib/SDL2/Linux/bin/SDL2.so"
 )
-deploy_shared_library("nvtt"
-        "${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/"
-        "${CMAKE_SOURCE_DIR}/lib/nvtt/bin/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/nvtt.dll"
-        "${CMAKE_SOURCE_DIR}/lib/nvtt/bin/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/nvtt.dylib"
-        "${CMAKE_SOURCE_DIR}/lib/nvtt/bin/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/nvtt.so"
-)
-add_dependencies(texture_compiler deploy_sdl2 deploy_nvtt)
+add_dependencies(texture_compiler deploy_sdl2)
