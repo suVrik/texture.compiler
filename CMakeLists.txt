@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(texture_compiler)
 
+include(cmake/shaderc.cmake)
+include(cmake/deploy.cmake)
+
 set(CMAKE_CXX_STANDARD 17)
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT texture_compiler)
 
@@ -61,33 +64,24 @@ if(APPLE)
     endif()
 endif()
 
+# Compile shaders.
+
+build_shaders("fragment" "${CMAKE_SOURCE_DIR}/*.fragment.sc" "${CMAKE_SOURCE_DIR}/src/headers/")
+build_shaders("vertex" "${CMAKE_SOURCE_DIR}/*.vertex.sc" "${CMAKE_SOURCE_DIR}/src/headers/")
+add_dependencies(texture_compiler build_fragment_shaders build_vertex_shaders)
+
 # Deploy shared libraries.
 
-set(shared_libraries "")
-
-if(WIN32)
-    # CMake generator expressions are not supported in add_custom_command OUTPUT yet.
-
-    add_custom_command(
-            DEPENDS "${CMAKE_SOURCE_DIR}/lib/SDL2/Windows/bin/SDL2.dll"
-            OUTPUT "${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SDL2.dll"
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/lib/SDL2/Windows/bin/SDL2.dll" "${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SDL2.dll"
-            COMMENT "Deploying SDL2.dll"
-    )
-    list(APPEND shared_libraries "${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SDL2.dll")
-
-    add_custom_command(
-            DEPENDS "${CMAKE_SOURCE_DIR}/lib/nvtt/bin/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/nvtt.dll"
-            OUTPUT "${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/nvtt.dll"
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_SOURCE_DIR}/lib/nvtt/bin/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/nvtt.dll" "${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/nvtt.dll"
-            COMMENT "Deploying nvtt.dll"
-    )
-    list(APPEND shared_libraries "${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/nvtt.dll")
-elseif(APPLE)
-    # TODO: MacOS
-elseif(UNIX)
-    # TODO: Linux
-endif()
-
-add_custom_target(deploy_shared_libraries ALL DEPENDS "${shared_libraries}")
-add_dependencies(texture_compiler deploy_shared_libraries)
+deploy_shared_library("sdl2"
+        "${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/"
+        "${CMAKE_SOURCE_DIR}/lib/SDL2/Windows/bin/SDL2.dll"
+        "${CMAKE_SOURCE_DIR}/lib/SDL2/Darwin/bin/SDL2.dylib"
+        "${CMAKE_SOURCE_DIR}/lib/SDL2/Linux/bin/SDL2.so"
+)
+deploy_shared_library("nvtt"
+        "${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/"
+        "${CMAKE_SOURCE_DIR}/lib/nvtt/bin/Windows/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/nvtt.dll"
+        "${CMAKE_SOURCE_DIR}/lib/nvtt/bin/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/nvtt.dylib"
+        "${CMAKE_SOURCE_DIR}/lib/nvtt/bin/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/nvtt.so"
+)
+add_dependencies(texture_compiler deploy_sdl2 deploy_nvtt)

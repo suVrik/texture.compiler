@@ -8,8 +8,8 @@ SAMPLERCUBE(s_texture, 0);
 
 uniform vec4 u_settings;
 
-#define u_side_resolution u_settings.x
-#define u_roughness u_settings.y
+#define u_roughness u_settings.x
+#define u_side_resolution u_settings.y
 
 float DistributionGGX(vec3 N, vec3 H, float roughness) {
     float a = roughness*roughness;
@@ -94,7 +94,7 @@ void main() {
             float sa_sample = 1.0 / (float(SAMPLE_COUNT) * pdf + 0.0001);
 
             float mip_level = u_roughness == 0.0 ? 0.0 : 0.5 * log2(sa_sample / sa_texel);
-            prefiltered_color += textureCubeLod(s_texture, L, mip_level).xyz * NdotL;
+            prefiltered_color += textureCubeLod(s_texture, L, 0.0).xyz * NdotL;
             total_weight += NdotL;
         }
     }

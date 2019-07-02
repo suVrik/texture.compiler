@@ -1028,7 +1028,8 @@ static int compile_cube_map(const std::string& input, const std::string& output,
             bgfx::setVertexBuffer(0, vertex_buffer, 0, static_cast<uint32_t>(std::size(CUBE_VERTICES) / 3));
             bgfx::setTexture(0, texture_uniform, cube_map_texture);
 
-            const float settings[4] = { static_cast<float>(mip_level) / total_mip_levels, static_cast<float>(output_size), 0.f, 0.f };
+            constexpr uint16_t MAX_MIP_LEVELS = 4;
+            const float settings[4] = { static_cast<float>(std::min(mip_level, MAX_MIP_LEVELS)) / MAX_MIP_LEVELS, static_cast<float>(output_size), 0.f, 0.f };
             bgfx::setUniform(settings_uniform, settings);
 
             bgfx::setState(BGFX_STATE_WRITE_RGB | BGFX_STATE_CULL_CCW);
