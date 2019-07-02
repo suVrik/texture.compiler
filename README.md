@@ -16,26 +16,17 @@ usage:
   texture_compiler.exe  options
 
 where options are:
-  --albedo-roughness                      Input contains albedo map and
-                                          roughness map
-  --normal-metalness-ambient-occlusion    Input contains normal, metalness
-                                          and ambient occlusion maps
+  --albedo-roughness                      Input contains albedo map and roughness map
+  --normal-metalness-ambient-occlusion    Input contains normal, metalness and ambient occlusion maps
   --parallax                              Input contains parallax map
   --cube-map                              Input contains cube map
   --input <example.png>                   Input texture path
   --output <example.texture>              Output texture path
-  --output-size <1024>                    Output texture size (needed only
-                                          for cube map, for other textures
-                                          output texture size is equal to
-                                          input texture size)
-  --irradiance <irradiance.texture>       Output irradiance texture path
-                                          (needed only for cube map)
-  --irradiance-size <32>                  Output irradiance texture size
-                                          (needed only for cube map)
-  --prefilter <prefilter.texture>         Output prefilter texture path
-                                          (needed only for cube map)
-  --prefilter-size <128>                  Output prefilter texture size
-                                          (needed only for cube map)
+  --output-size <1024>                    Output texture size (needed only for cube map, for other textures output texture size is equal to input texture size)
+  --irradiance <irradiance.texture>       Output irradiance texture path (needed only for cube map)
+  --irradiance-size <32>                  Output irradiance texture size (needed only for cube map)
+  --prefilter <prefilter.texture>         Output prefilter texture path (needed only for cube map)
+  --prefilter-size <128>                  Output prefilter texture size (needed only for cube map)
   --production                            Good but slow texture compression
   --development                           Poor but quick texture compression
   --no-compression                        No texture compression
