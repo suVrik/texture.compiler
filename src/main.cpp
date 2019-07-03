@@ -719,6 +719,7 @@ static int compile_cube_map(const std::string& input, const std::string& output,
     switch (compression) {
         case Compression::GOOD_BUT_SLOW:
             cube_map_compression_options.setFormat(nvtt::Format_BC6);
+            cube_map_compression_options.setPixelType(nvtt::PixelType_Float);
             break;
         case Compression::POOR_BUT_FAST:
             // BC6 is quite slow on big HDR textures.
@@ -1048,6 +1049,7 @@ static int compile_cube_map(const std::string& input, const std::string& output,
         case Compression::POOR_BUT_FAST:
             // BC6 is quite fast for small prefilter texture.
             prefilter_compression_options.setFormat(nvtt::Format_BC6);
+            prefilter_compression_options.setPixelType(nvtt::PixelType_Float);
             break;
         case Compression::NO_COMPRESSION:
             // R16G16B16A16.
