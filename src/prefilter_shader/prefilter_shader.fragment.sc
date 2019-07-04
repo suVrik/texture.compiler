@@ -94,7 +94,7 @@ void main() {
             float sa_sample = 1.0 / (float(SAMPLE_COUNT) * pdf + 0.0001);
 
             float mip_level = u_roughness == 0.0 ? 0.0 : 0.5 * log2(sa_sample / sa_texel);
-            prefiltered_color += textureCubeLod(s_texture, L, 0.0).xyz * NdotL;
+            prefiltered_color += textureCubeLod(s_texture, L, mip_level).xyz * NdotL;
             total_weight += NdotL;
         }
     }
