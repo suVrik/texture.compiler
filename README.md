@@ -7,7 +7,7 @@ Normal part of `RG normal, B metalness, A ambient occlusion` is mip mapped with 
 | RGB base color, A roughness | BC7 | BC3 | RGBA8 |
 | RG normal, B metalness, A ambient occlusion | BC7 | BC3 | RGBA8 |
 | R height | BC4 | BC4 | R8 |
-| HDR cube map | BC6H | BC3 | RGBA16 |
+| HDR cube map | BC6H | BC6H | RGBA16 |
 | Irradiance (automatically generated from cube map) | RGBA16 | RGBA16 | RGBA16 |
 | Prefilter (automatically generated from cube map) | BC6H | BC6H | RGBA16 |
 
