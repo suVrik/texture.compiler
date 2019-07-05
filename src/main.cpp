@@ -1040,21 +1040,11 @@ static int compile_cube_map(const std::string& input, const std::string& output,
     prefilter_output_options.setContainer(nvtt::Container_DDS10);
     prefilter_output_options.setErrorHandler(&error_handler);
 
+    // Don't apply compression to prefilter texture. Use R16G16B16A16 instead.
     nvtt::CompressionOptions prefilter_compression_options;
-    switch (compression) {
-        case Compression::GOOD_BUT_SLOW:
-        case Compression::POOR_BUT_FAST:
-            // BC6 is quite fast for small prefilter texture.
-            prefilter_compression_options.setFormat(nvtt::Format_BC6);
-            prefilter_compression_options.setPixelType(nvtt::PixelType_Float);
-            break;
-        case Compression::NO_COMPRESSION:
-            // R16G16B16A16.
-            prefilter_compression_options.setFormat(nvtt::Format_RGBA);
-            prefilter_compression_options.setPixelFormat(16, 16, 16, 16);
-            prefilter_compression_options.setPixelType(nvtt::PixelType_Float);
-            break;
-    }
+    prefilter_compression_options.setFormat(nvtt::Format_RGBA);
+    prefilter_compression_options.setPixelFormat(16, 16, 16, 16);
+    prefilter_compression_options.setPixelType(nvtt::PixelType_Float);
 
     nvtt::Compressor prefilter_compressor;
 
