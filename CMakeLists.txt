@@ -57,7 +57,22 @@ elseif(APPLE)
     target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libnvcore.a")
     target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Darwin/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libsquish.a")
 elseif(UNIX)
-    # TODO: Linux
+    set(OpenGL_GL_PREFERENCE GLVND)
+    find_package(OpenGL REQUIRED)
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/SDL2/Linux/bin/libSDL2.so")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libnvtt.a")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libnvimage.a")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbc7.a")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbc6h.a")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libnvmath.a")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libnvthread.a")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libnvcore.a")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/nvtt/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libsquish.a")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbgfx.a")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbimg.a")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libbx.a")
+    target_link_libraries(texture_compiler PRIVATE "${CMAKE_SOURCE_DIR}/lib/bgfx/lib/Linux/$<$<CONFIG:Debug>:Debug>$<$<CONFIG:Release>:Release>/libastc-codec.a")
+    target_link_libraries(texture_compiler PRIVATE X11 pthread ${CMAKE_DL_LIBS} ${OPENGL_LIBRARIES})
 endif()
 
 # Link against static runtime library.
@@ -78,7 +93,7 @@ endif()
 
 # Set up shared libraries location directory for MacOS and Linux.
 
-if(APPLE)
+if(UNIX)
     set_property(TARGET texture_compiler PROPERTY SKIP_BUILD_RPATH "ON")
 
     if(APPLE)
@@ -100,6 +115,6 @@ deploy_shared_library("sdl2"
         "${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/"
         "${CMAKE_SOURCE_DIR}/lib/SDL2/Windows/bin/SDL2.dll"
         "${CMAKE_SOURCE_DIR}/lib/SDL2/Darwin/bin/libSDL2.dylib"
-        "${CMAKE_SOURCE_DIR}/lib/SDL2/Linux/bin/SDL2.so"
+        "${CMAKE_SOURCE_DIR}/lib/SDL2/Linux/bin/libSDL2.so"
 )
 add_dependencies(texture_compiler deploy_sdl2)
