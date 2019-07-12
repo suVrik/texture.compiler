@@ -18,9 +18,11 @@ void main() {
     for (float phi = 0.0; phi < 2.0 * PI; phi += 0.025) {
         for (float theta = 0.0; theta < 0.5 * PI; theta += 0.01) {
             vec3 tangent_sample = vec3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
-            vec3 sample_cec = tangent_sample.x * right + tangent_sample.y * up + tangent_sample.z * normal;
-
-            irradiance += textureCube(s_texture, sample_cec).xyz * cos(theta) * sin(theta);
+            vec3 sample_dir = tangent_sample.x * right + tangent_sample.y * up + tangent_sample.z * normal;
+            #if (BGFX_SHADER_LANGUAGE_HLSL || BGFX_SHADER_LANGUAGE_PSSL || BGFX_SHADER_LANGUAGE_METAL)
+            sample_dir.y = -sample_dir.y;
+            #endif
+            irradiance += textureCube(s_texture, sample_dir).xyz * cos(theta) * sin(theta);
             nr_samples++;
         }
     }
